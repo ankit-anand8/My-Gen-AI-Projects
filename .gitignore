@@ -9,3 +9,20 @@ wheels/
 # Virtual environments
 .venv
 .env
+
+# Practice documents
+/notes.txt
+/generative_ai_guide.pdf
+/os_practice.py
+
+# Chroma databases
+/chroma_db/
+/RAG Project/chroma_db/
+#Because chroma_db contains the actual vector database created from your documents.
+#It creates a local chroma_db folder containing the stored vectors and document data.
+#Why don't we upload it?
+#  Because AskDoc AI is designed to create the database from whatever document the user uploads.
+#    So if you upload your current chroma_db:
+#     it contains data from your practice document
+#     it makes the repository unnecessarily large
+#     it isn't needed for deployment
