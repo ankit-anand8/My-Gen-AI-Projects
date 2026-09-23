@@ -10,7 +10,7 @@ langchain-chroma
 sentence-transformers
 chromadb
 pypdf
-python-dotenv
+docx2txt
 streamlit
 
 #uv pip install -r requirements.txt
