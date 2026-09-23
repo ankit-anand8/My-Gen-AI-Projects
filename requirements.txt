@@ -1,6 +1,7 @@
 langchain
 langchain-core
 langchain-community
+python-dotenv
 langchain-text-splitters
 langchain-google-genai
 langchain-groq
