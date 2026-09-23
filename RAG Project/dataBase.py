@@ -1,7 +1,9 @@
+from dotenv import load_dotenv
+load_dotenv()
 #load
 from langchain_community.document_loaders import TextLoader,PyPDFLoader,Docx2txtLoader
 
-filename= input("Upload your file ")
+filename= input("Upload your file : ")
 import os
 name,extension=os.path.splitext(filename)
 
