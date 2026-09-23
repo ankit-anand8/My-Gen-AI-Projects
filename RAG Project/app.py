@@ -65,7 +65,7 @@ if uploaded_file is not None and uploaded_file.name != st.session_state.filename
         splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         chunks = splitter.split_documents(docs)
 
-        persist_directory = "chroma_db"
+        persist_directory = "/tmp/chroma_db"
         if os.path.exists(persist_directory):
             shutil.rmtree(persist_directory)
 
