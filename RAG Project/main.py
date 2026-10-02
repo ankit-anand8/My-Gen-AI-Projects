@@ -1,70 +1,85 @@
 from dotenv import load_dotenv
 load_dotenv()
 
-#embedding model for embedding the query
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
-embedding_model=GoogleGenerativeAIEmbeddings(
-    model="gemini-embedding-001"
-)
-
-# Embedding model used to convert the user's query into a vector during retrieval
-from langchain_chroma import Chroma
-vectorstore=Chroma(
-    persist_directory="chroma_db",
-    embedding_function=embedding_model
-)
-
-retriever=vectorstore.as_retriever(
-    search_type="mmr",
-    search_kwargs={
-        "k":4,
-        "fetch_k":15,
-        "lambda_mult":0.5
-    }
-)
+from dataBase import build_retriever
 
 from langchain_core.prompts import ChatPromptTemplate
-template=ChatPromptTemplate([
-    ("system",
-     """
-You are an AI tutor, who explains in detail and in simple terms.
- Use ONLY the provided context to answer the questions.
- If the answer is not present in the context, say:
- "I Could Not Find The Answer In The Document."
-"""),
-("user","""
-Context : 
-"{context}" 
+from langchain_google_genai import GoogleGenerativeAI
 
-Question :
-"{question}"
-""")
+
+# Get File 
+file_path = input("Enter the path of your PDF/TXT/DOCX file: ")
+
+
+# Create Retriever
+retriever = build_retriever(file_path) #Build the searcher.
+
+# build_retriever() will:
+# 1. Detect the file type
+# 2. Load the document
+# 3. Split it into chunks
+# 4. Create embeddings
+# 5. Store the embeddings in Chroma
+# 6. Return a Retriever
+
+
+# Prompt Template
+template = ChatPromptTemplate([
+    (
+        "system",
+        """
+        You are an AI tutor who explains things in detail and in simple terms.
+        Use ONLY the provided context to answer the question.
+        If the answer is not present in the context, say:
+        "I Could Not Find The Answer In The Document."
+        """
+    ),
+    (
+        "user",
+        """
+        Context:
+        {context}
+        
+        Question:
+        {question}
+        """
+    )
 ])
 
-from langchain_google_genai import GoogleGenerativeAI
-model=GoogleGenerativeAI(
+
+#LLM
+model = GoogleGenerativeAI(
     model="gemini-3.5-flash-lite"
 )
 
-print("-----------------------------RAG System Created--------------------------")
-print("Press 0 to Exit")
+
+print("\n----------------------------- RAG System Created --------------------------")
+print("Ask questions about your document.")
+print("Press 0 to Exit.\n")
+
 
 while True:
-    query=input("You : ")
-    if query=="0":
+
+    query = input("You : ")
+
+    if query == "0":
         break
-    docs=retriever.invoke(query)
+    # Retrieve relevant chunks
+    docs = retriever.invoke(query) #Use the searcher.
 
-    context=""
-    for i in docs:
-        context=context+ i.page_content+"\n\n"
+    # Combine retrieved chunks into context
+    context = ""
+    for doc in docs:
+        context += doc.page_content + "\n\n"
 
-    final_prompt=template.invoke({
-        "context":context,
-        "question" :query
-        })
-    #We could have used template.format_messages() as well, 
-    # but invoke() follows the common Runnable interface in LangChain.
-    
-    response=model.invoke(final_prompt)
-    print("Bot : ", response)
+
+    # Create final prompt
+    final_prompt = template.invoke({
+        "context": context,
+        "question": query
+    })
+
+
+    # Ask LLM
+    response = model.invoke(final_prompt)
+    print("Bot :", response,"\n")
