@@ -34,7 +34,7 @@ The retrieved chunks are provided as context to Gemini, which generates the fina
 
 ## 🌐 Live Demo
 
-[Try AskDoc AI](https://my-gen-ai-projects-urbis5fisarfj4beaynewf.streamlit.app/)
+[Try AskDoc AI](https://my-gen-ai-projects-3wum44rhcwygnxnqnt2xeb.streamlit.app/)
 
 ## 📁 Project Files
 
