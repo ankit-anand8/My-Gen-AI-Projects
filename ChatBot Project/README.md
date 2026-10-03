@@ -1,4 +1,4 @@
-# 🤖 Mode Chatbot
+# 🤖 Multi Mode AI Chatbot
 
 A simple Generative AI chatbot built with Python, LangChain, Gemini, and Streamlit.
 
